@@ -1,0 +1,179 @@
+/* src/app/globals.css
+ *
+ * NÃO copie este arquivo por cima do que o `shadcn init` gerou. Ele é
+ * referência de ONDE COLAR os três blocos do template dentro do seu
+ * globals.css — o `:root` e o `@theme inline` reais são os do seu preset.
+ *
+ * Todo valor aqui é ilustrativo. A fonte de verdade é o `plan.md`: §1.3 para a
+ * escala tipográfica, §2 para os tokens de cor.
+ *
+ * Regra geral: edite APENAS `:root` e os dois blocos marcados abaixo. O
+ * `@theme inline` só espelha nomes — editar ele quebra os componentes instalados.
+ */
+
+/* Os imports do topo variam por preset. Mantenha os que o SEU init gerou. */
+
+/* ── BLOCO DO TEMPLATE 1: largura de leitura ──────────────────────────────
+   Usada no wrapper INTERNO de cada seção. O fundo continua full-bleed na
+   <section> e só o conteúdo é limitado — é o que preserva o ritmo de faixas
+   de cor do plan.md §2. A largura máxima e o padding vêm de plan.md §1.2;
+   `container` sozinho vai a 1536px, largo demais para uma coluna de leitura. */
+@layer utilities {
+  .section-container {
+    @apply mx-auto w-full max-w-6xl px-5 md:px-11;
+  }
+}
+
+/* ── BLOCO DO TEMPLATE 2: escala tipográfica ──────────────────────────────
+   A tabela de papéis de plan.md §1.3, um `@utility` por papel.
+   Sufixo -lg = desktop; sem sufixo = mobile (mobile-first).
+   Uso no JSX: `type-h1 lg:type-h1-lg` — nunca `text-[30px]`.
+
+   POR QUE `@utility` E NÃO `@theme { --text-* }`:
+   `--text-h1` gera a classe `text-h1`, e o `tailwind-merge` lê qualquer
+   `text-<algo>` que não conheça como COR de texto. Dentro do cva do botão isso
+   apaga o `text-primary-foreground` que veio antes na string — CTA com
+   contraste de 1,29:1, e o erro não está em nenhum arquivo do projeto.
+   Fora do namespace `text-` a colisão não existe: o `cn()` é o do shadcn, sem
+   `extendTailwindMerge` e sem lista de nomes para manter.
+   Peso entra junto com tamanho, leading e tracking — papel é o conjunto dos
+   quatro, não só o tamanho. */
+@utility type-h1 {
+  font-size: 1.875rem; /* 30px */
+  line-height: 1.14;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+}
+@utility type-h1-lg {
+  font-size: 3.375rem; /* 54px */
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+}
+
+@utility type-h2 {
+  font-size: 1.5rem; /* 24px */
+  line-height: 1.2;
+  letter-spacing: -0.028em;
+  font-weight: 500;
+}
+@utility type-h2-lg {
+  font-size: 2.375rem; /* 38px */
+  line-height: 1.14;
+  letter-spacing: -0.028em;
+  font-weight: 500;
+}
+
+@utility type-h3 {
+  font-size: 1rem; /* 16px */
+  line-height: 1.3;
+  font-weight: 500;
+}
+@utility type-h3-lg {
+  font-size: 1.3125rem; /* 21px */
+  line-height: 1.3;
+  font-weight: 500;
+}
+
+@utility type-lead {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.5;
+  font-weight: 400;
+}
+@utility type-lead-lg {
+  font-size: 1.0625rem; /* 17px */
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+@utility type-body {
+  font-size: 0.9375rem; /* 15px — abaixo de 14px vira risco de legibilidade */
+  line-height: 1.55;
+  font-weight: 400;
+}
+@utility type-body-lg {
+  font-size: 1rem; /* 16px */
+  line-height: 1.55;
+  font-weight: 400;
+}
+
+@utility type-label {
+  font-size: 0.6875rem; /* 11px */
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+}
+@utility type-label-lg {
+  font-size: 0.75rem; /* 12px */
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+}
+
+@utility type-stat {
+  font-size: 1.625rem; /* 26px */
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  font-weight: 500;
+}
+@utility type-stat-lg {
+  font-size: 2.5rem; /* 40px */
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  font-weight: 500;
+}
+
+/* ── NÃO EDITAR: o `@theme inline` que o seu `init` gerou fica aqui ────────
+   Não está reproduzido neste arquivo de propósito: ele varia por preset
+   (chart-*, sidebar-*, --radius-4xl) e copiar o de outro projeto quebra os
+   componentes instalados. Abra o seu e anote dois nomes dele, porque o bloco
+   abaixo depende deles:
+     1. o que `--font-sans` consome   → normalmente `var(--font-sans)`
+     2. o que `--font-mono` consome   → normalmente `var(--font-geist-mono)`
+   Esses são os nomes que o `next/font` precisa injetar no layout.tsx. */
+
+/* ── BLOCO DO TEMPLATE 3: tokens de marca ─────────────────────────────────
+   Segundo `:root`, colado DEPOIS do que o `init` gerou: em CSS, `:root`
+   repetido faz o último valor de cada propriedade vencer, e o que este bloco
+   não toca continua com o default do preset.
+   Transcreva de plan.md §2 SÓ o que substitui um default. Recopiar o valor
+   que já era o do preset não muda nada e esconde o que de fato mudou. */
+:root {
+  --radius: 1.125rem; /* 18px */
+
+  /* Cor de ação — CTA e seções escuras */
+  --primary: oklch(0.34 0.052 155);
+  --primary-foreground: oklch(0.985 0 0);
+
+  /* Destaque — exclusivo de fundo escuro */
+  --accent: oklch(0.93 0.137 116);
+  --accent-foreground: oklch(0.19 0.012 110);
+
+  --muted-foreground: oklch(0.52 0 0);
+
+  /* --ring segue --primary neste projeto */
+  --ring: oklch(0.34 0.052 155);
+}
+
+/* NÃO há alias de fonte aqui, e isso é deliberado.
+   As fontes se ligam no layout.tsx: o `next/font` recebe `variable` com o
+   MESMO nome que o `@theme inline` do preset consome (`--font-sans`,
+   `--font-geist-mono`). O create-next-app gera `--font-geist-sans`, que o
+   preset não consome — é por isso que "a fonte carrega e nada usa ela".
+   Renomear lá resolve; alias aqui só empurra o problema, e briga com a
+   variável que o next/font já define no <html>. */
+
+/* ── NÃO COLAR: o `shadcn init` já gerou este bloco, idêntico, no seu
+   globals.css. Está reproduzido aqui só para você reconhecê-lo e saber que os
+   três blocos do template ficam ANTES dele. Colar de novo duplica. */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
