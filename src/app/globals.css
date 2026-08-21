@@ -126,6 +126,8 @@
   --color-cta-light: oklch(0.975 0.006 92); /* off-white sólido do CTA invertido */
 
   --radius-media: 0.875rem; /* 14px — raio de imagem, plan.md §1.2 */
+
+  --container-content: 96rem; /* 1536px — largura máxima do conteúdo, plan.md §1.2 */
 }
 
 /* Tokens de marca — plan.md §2. Segundo `:root`, depois do que o preset gerou:
@@ -159,7 +161,7 @@
    conteúdo entra aqui. */
 @layer utilities {
   .section-container {
-    @apply mx-auto w-full max-w-6xl px-5 lg:px-16;
+    @apply max-w-content mx-auto w-full px-5 lg:px-16;
   }
 }
 
