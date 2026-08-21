@@ -23,9 +23,19 @@ interface ImagePlaceholderProps {
   ratio: string;
   /** Enquadramento esperado, resumido, para conferir a foto quando ela chegar. */
   hint?: string;
+  /**
+   * Canto do rótulo. Na 04 o canto superior já é da numeração da etapa, e o
+   * próprio hi-fi desenha a legenda embaixo ali.
+   */
+  labelPosition?: "top" | "bottom";
 }
 
-export function ImagePlaceholder({ id, ratio, hint }: ImagePlaceholderProps) {
+export function ImagePlaceholder({
+  id,
+  ratio,
+  hint,
+  labelPosition = "top",
+}: ImagePlaceholderProps) {
   return (
     <div
       aria-hidden="true"
@@ -35,7 +45,9 @@ export function ImagePlaceholder({ id, ratio, hint }: ImagePlaceholderProps) {
           "repeating-linear-gradient(135deg, var(--border) 0 9px, var(--secondary) 9px 18px)",
       }}
     >
-      <span className="type-label lg:type-label-lg bg-background text-body absolute top-3 left-3 max-w-[60%] rounded-md px-2 py-1.5 font-mono normal-case">
+      <span
+        className={`type-label lg:type-label-lg bg-background text-body absolute left-3 max-w-[60%] ${labelPosition === "top" ? "top-3" : "bottom-3"} rounded-md px-2 py-1.5 font-mono normal-case`}
+      >
         {id} · {ratio}
         {hint ? <span className="block">{hint}</span> : null}
       </span>
