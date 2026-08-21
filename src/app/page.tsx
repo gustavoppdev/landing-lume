@@ -1,6 +1,7 @@
 import { About } from "@/components/sections/About";
 import { Featured } from "@/components/sections/Featured";
 import { Hero } from "@/components/sections/Hero";
+import { PracticeSteps } from "@/components/sections/PracticeSteps";
 import { Treatments } from "@/components/sections/Treatments";
 import { WhatsappButton } from "@/components/WhatsappButton";
 
@@ -18,6 +19,7 @@ const Home = () => {
         <About />
         <Featured />
         <Treatments />
+        <PracticeSteps />
 
         <div className="border-border bg-background/92 sticky bottom-0 z-40 mt-auto border-t px-5 py-3 backdrop-blur-sm lg:hidden">
           <WhatsappButton
