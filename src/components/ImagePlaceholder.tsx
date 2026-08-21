@@ -28,6 +28,12 @@ interface ImagePlaceholderProps {
    * próprio hi-fi desenha a legenda embaixo ali.
    */
   labelPosition?: "top" | "bottom";
+  /**
+   * Sem rótulo: o avatar redondo do depoimento tem 36px e nada cabe ali. O
+   * `<figure>` do mesmo card já imprime o id, e as duas imagens são a mesma
+   * foto (`plan.md` §1.7) — a `12-images` troca as duas juntas.
+   */
+  compact?: boolean;
 }
 
 export function ImagePlaceholder({
@@ -35,6 +41,7 @@ export function ImagePlaceholder({
   ratio,
   hint,
   labelPosition = "top",
+  compact = false,
 }: ImagePlaceholderProps) {
   return (
     <div
@@ -45,12 +52,14 @@ export function ImagePlaceholder({
           "repeating-linear-gradient(135deg, var(--border) 0 9px, var(--secondary) 9px 18px)",
       }}
     >
-      <span
-        className={`type-label lg:type-label-lg bg-background text-body absolute left-3 max-w-[60%] ${labelPosition === "top" ? "top-3" : "bottom-3"} rounded-md px-2 py-1.5 font-mono normal-case`}
-      >
-        {id} · {ratio}
-        {hint ? <span className="block">{hint}</span> : null}
-      </span>
+      {compact ? null : (
+        <span
+          className={`type-label lg:type-label-lg bg-background text-body absolute left-3 max-w-[60%] ${labelPosition === "top" ? "top-3" : "bottom-3"} rounded-md px-2 py-1.5 font-mono normal-case`}
+        >
+          {id} · {ratio}
+          {hint ? <span className="block">{hint}</span> : null}
+        </span>
+      )}
     </div>
   );
 }
