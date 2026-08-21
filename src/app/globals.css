@@ -280,3 +280,11 @@
     animation-duration: 0.01ms;
   }
 }
+
+/* O `scroll-smooth` do <html> (layout.tsx) é animação e obedece à mesma regra
+   das outras (AGENTS.md §4, regra 10). */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

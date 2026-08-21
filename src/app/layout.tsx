@@ -23,11 +23,16 @@ export const metadata: Metadata = {
     "Avaliação facial presencial de 50 minutos com biomédica esteta na Savassi. Protocolos montados caso a caso, com valores na página.",
 };
 
+// `scroll-smooth` vai no <html>, não no <body>: `scroll-behavior` não propaga
+// do body para o viewport (diferente de `overflow`), então no body ele não faz
+// nada. Decisão do usuário — registrada em `plan.md` §1.6. O
+// `prefers-reduced-motion` que a AGENTS.md §4 regra 10 exige está no
+// `globals.css`, junto do token.
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="pt-BR"
-      className={`${sans.variable} ${mono.variable} h-full antialiased`}
+      className={`${sans.variable} ${mono.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
