@@ -269,3 +269,14 @@
     @apply font-sans;
   }
 }
+
+/* O accordion do preset anima a ALTURA do painel (tw-animate-css). É a única
+   animação da página fora do `Animate`, e o `Animate` trata a preferência
+   sozinho — este bloco é o que estende a regra 10 do `AGENTS.md` §4 a ela.
+   Não é CLS: a mudança de altura é resposta a clique, não deslocamento
+   inesperado. */
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="accordion-content"] {
+    animation-duration: 0.01ms;
+  }
+}
