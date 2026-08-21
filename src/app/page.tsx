@@ -1,6 +1,7 @@
 import { About } from "@/components/sections/About";
 import { Faq } from "@/components/sections/Faq";
 import { Featured } from "@/components/sections/Featured";
+import { FinalCta } from "@/components/sections/FinalCta";
 import { Hero } from "@/components/sections/Hero";
 import { PracticeSteps } from "@/components/sections/PracticeSteps";
 import { Testimonials } from "@/components/sections/Testimonials";
@@ -15,8 +16,8 @@ const Home = () => {
       {/* Barra fixa de CTA do mobile — exceção registrada na spec.md §1.
           Ela é o ÚLTIMO filho deste wrapper e `sticky bottom-0`: fica presa ao
           fim da viewport enquanto o wrapper está em cena e some quando ele
-          termina. Sem IntersectionObserver e sem Client Component. A feature 8
-          fecha o wrapper antes da 07, que é onde a barra deve sumir. */}
+          termina. Sem IntersectionObserver e sem Client Component. A 07 fica FORA
+          deste wrapper, que é onde a barra deve sumir. */}
       <div className="flex flex-1 flex-col">
         <About />
         <Featured />
@@ -33,6 +34,8 @@ const Home = () => {
           />
         </div>
       </div>
+
+      <FinalCta />
     </>
   );
 };
