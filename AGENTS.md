@@ -60,6 +60,12 @@ Os critérios de aceite saem em **dois blocos coláveis, executados pelo agente*
 
 Cada linha imprime o valor que decide, não um `true` mudo. O que não vira comando (ordem visual, sensação de peso) desce para "como testar à mão", e é curto.
 
+**O `grep` do critério enxerga o comentário.** Um critério que procura o
+literal que o comentário do arquivo usa para explicar a decisão volta contando
+a explicação — quatro features seguidas caíram nisso. Escreva o comentário sem
+o literal, ou ancore o `grep` no que só existe no JSX (`className="…"`,
+`<Tag`), nunca na palavra solta.
+
 ```sh
 grep -rl "priority" src/ | wc -l    # esperado: 0 — deprecado no Next 16
 grep -rl "preload" src/ | wc -l     # esperado: 1 — só o hero
