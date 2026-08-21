@@ -6,8 +6,7 @@ import useEmblaCarousel, {
 } from "embla-carousel-react"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react"
 
 type CarouselApi = UseEmblaCarouselType[1]
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
@@ -171,63 +170,101 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+// As setas saem do `buttonVariants` de propósito: a 05 é faixa escura e as duas
+// ênfases que ela precisa (contorno off-white e sólido off-white) não são chave
+// do cva — e concatenar cor por fora dele é o que o AGENTS.md §1 proíbe. Como o
+// carrossel serve só a 05 (plan.md §3), o botão nativo com as classes da
+// chamada é o caminho simples. O foco visível, que vinha do cva, vem daqui.
+const arrowClass =
+  "inline-flex size-11 shrink-0 touch-manipulation items-center justify-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-40 [&_svg]:size-4 [&_svg]:shrink-0"
+
 function CarouselPrevious({
   className,
-  variant = "outline",
-  size = "icon-sm",
+  "aria-label": ariaLabel = "Item anterior",
   ...props
-}: React.ComponentProps<typeof Button>) {
-  const { orientation, scrollPrev, canScrollPrev } = useCarousel()
+}: React.ComponentProps<"button">) {
+  const { scrollPrev, canScrollPrev } = useCarousel()
 
   return (
-    <Button
+    <button
+      type="button"
       data-slot="carousel-previous"
-      variant={variant}
-      size={size}
-      className={cn(
-        "absolute touch-manipulation rounded-full",
-        orientation === "horizontal"
-          ? "inset-y-0 -left-12 my-auto"
-          : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
-        className
-      )}
+      aria-label={ariaLabel}
+      className={cn(arrowClass, className)}
       disabled={!canScrollPrev}
       onClick={scrollPrev}
       {...props}
     >
-      <ChevronLeftIcon />
-      <span className="sr-only">Previous slide</span>
-    </Button>
+      <ArrowLeftIcon />
+    </button>
   )
 }
 
 function CarouselNext({
   className,
-  variant = "outline",
-  size = "icon-sm",
+  "aria-label": ariaLabel = "Próximo item",
   ...props
-}: React.ComponentProps<typeof Button>) {
-  const { orientation, scrollNext, canScrollNext } = useCarousel()
+}: React.ComponentProps<"button">) {
+  const { scrollNext, canScrollNext } = useCarousel()
 
   return (
-    <Button
+    <button
+      type="button"
       data-slot="carousel-next"
-      variant={variant}
-      size={size}
-      className={cn(
-        "absolute touch-manipulation rounded-full",
-        orientation === "horizontal"
-          ? "inset-y-0 -right-12 my-auto"
-          : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
-        className
-      )}
+      aria-label={ariaLabel}
+      className={cn(arrowClass, className)}
       disabled={!canScrollNext}
       onClick={scrollNext}
       {...props}
     >
-      <ChevronRightIcon />
-      <span className="sr-only">Next slide</span>
-    </Button>
+      <ArrowRightIcon />
+    </button>
+  )
+}
+
+/**
+ * Indicador "01 / 03". `total` existe para o HTML estático já sair com o número
+ * final: a api do embla só responde depois da hidratação, e sem ele o servidor
+ * imprimiria um total zerado que muda no cliente.
+ */
+function CarouselIndex({
+  className,
+  total = 0,
+  ...props
+}: React.ComponentProps<"span"> & { total?: number }) {
+  const { api } = useCarousel()
+  const [index, setIndex] = React.useState(0)
+  const [count, setCount] = React.useState(total)
+
+  React.useEffect(() => {
+    if (!api) return
+
+    const update = () => {
+      setCount(api.scrollSnapList().length)
+      setIndex(api.selectedScrollSnap())
+    }
+
+    update()
+    api.on("select", update)
+    api.on("reInit", update)
+
+    return () => {
+      api.off("select", update)
+      api.off("reInit", update)
+    }
+  }, [api])
+
+  const pad = (value: number) => String(value).padStart(2, "0")
+
+  return (
+    <span
+      data-slot="carousel-index"
+      aria-live="polite"
+      className={className}
+      {...props}
+    >
+      {pad(index + 1)} / {pad(count)}
+    </span>
   )
 }
 
@@ -238,5 +275,6 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  CarouselIndex,
   useCarousel,
 }
