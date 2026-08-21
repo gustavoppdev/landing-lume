@@ -6,7 +6,7 @@
  */
 
 import Image from "next/image";
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 import heroImage from "@/assets/hero.webp";
 import { WhatsappButton } from "@/components/WhatsappButton";
@@ -25,7 +25,10 @@ const navLinkClass =
 
 export function Hero() {
   return (
-    <section className="relative isolate flex min-h-[620px] flex-col overflow-hidden lg:min-h-[720px]">
+    <section
+      id="topo"
+      className="relative isolate flex min-h-[620px] flex-col overflow-hidden lg:min-h-[720px]"
+    >
       <Image
         src={heroImage}
         alt="Mulher de olhos fechados recebendo luz natural no rosto, em close"
@@ -68,16 +71,38 @@ export function Hero() {
             />
           </nav>
 
-          {/* Abaixo de lg, as mesmas âncoras num disclosure nativo: sem Client
-              Component, sem modal (spec.md §1) e um único stop de Tab. */}
-          <details className="relative lg:hidden">
-            <summary className="bg-foreground/40 text-primary-foreground rounded-media focus-visible:outline-primary-foreground flex size-11 cursor-pointer list-none items-center justify-center backdrop-blur-sm focus-visible:outline-2 focus-visible:outline-offset-2 [&::-webkit-details-marker]:hidden">
-              <Menu className="size-5" />
+          {/* Abaixo de lg, as mesmas âncoras num disclosure de `:target`: sem
+              Client Component, sem modal (spec.md §1).
+
+              POR QUE NÃO `<details>`: ele só fecha por clique no `<summary>`, e
+              clicar numa âncora do índice não é isso — o menu ficava aberto por
+              cima da seção recém-navegada, e continuava aberto na volta. Aqui
+              quem abre é o hash `#menu` e quem fecha é a própria navegação:
+              trocar para `#faq` tira o `:target` e o painel some sozinho.
+              Decisão do usuário, registrada em `plan.md` §3.
+
+              O CUSTO: sem `<details>` não há `aria-expanded`. Os dois links
+              trocam de rótulo ("Abrir" / "Fechar") e só um existe por vez, então
+              o estado continua dito em voz alta — mas por texto, não por
+              atributo. */}
+          <div id="menu" className="group/menu relative lg:hidden">
+            <a
+              href="#menu"
+              className="bg-foreground/40 text-primary-foreground rounded-media focus-visible:outline-primary-foreground flex size-11 items-center justify-center backdrop-blur-sm group-target/menu:hidden focus-visible:outline-2 focus-visible:outline-offset-2"
+            >
+              <Menu aria-hidden="true" className="size-5" />
               <span className="sr-only">Abrir o índice das seções</span>
-            </summary>
+            </a>
+            <a
+              href="#topo"
+              className="bg-foreground/40 text-primary-foreground rounded-media focus-visible:outline-primary-foreground hidden size-11 items-center justify-center backdrop-blur-sm group-target/menu:flex focus-visible:outline-2 focus-visible:outline-offset-2"
+            >
+              <X aria-hidden="true" className="size-5" />
+              <span className="sr-only">Fechar o índice das seções</span>
+            </a>
             <nav
               aria-label="Seções da página"
-              className="bg-background text-foreground absolute end-0 top-full z-10 mt-2 flex w-56 flex-col gap-1 rounded-lg p-3 shadow-lg"
+              className="bg-background text-foreground absolute end-0 top-full z-10 mt-2 hidden w-56 flex-col gap-1 rounded-lg p-3 shadow-lg group-target/menu:flex"
             >
               {NAV_LINKS.map((link) => (
                 <a
@@ -89,7 +114,7 @@ export function Hero() {
                 </a>
               ))}
             </nav>
-          </details>
+          </div>
         </div>
 
         <p className="bg-foreground/45 type-label lg:type-label-lg mt-5 flex w-fit items-center gap-2 rounded-full py-2 pr-4 pl-3 font-mono backdrop-blur-sm">
