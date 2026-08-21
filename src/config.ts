@@ -2,40 +2,35 @@
  * src/config.ts — fonte única de verdade dos dados do cliente.
  *
  * Nenhum componente contém número, mensagem ou texto de CTA hardcoded
- * (AGENTS.md, Seção 1). Valores vêm de spec.md, Seção 1.
+ * (AGENTS.md §1). Valores vêm da spec.md §1.
  */
 
 export const clientConfig = {
-  /** Nome do negócio — spec.md §1 */
-  businessName: "[NOME DO NEGÓCIO]",
+  businessName: "Lume Estética Avançada",
 
   /** Formato internacional, só dígitos: 55 + DDD + número */
-  whatsappNumber: "[5511999990000]",
+  whatsappNumber: "5531999990000",
 
   /**
-   * O MESMO texto em todas as ocorrências da página (AGENTS.md §4, regra 2):
-   * repetição gera reconhecimento. Não crie um label por seção — a ênfase
-   * visual é que varia, e isso é decisão do plan.md §1.5, não deste arquivo.
+   * O MESMO texto em todas as ocorrências da página (AGENTS.md §4, regra 2).
+   * A ênfase visual é que varia, e isso é decisão do plan.md §1.5.
    */
-  ctaLabel: "[Falar no WhatsApp]",
+  ctaLabel: "Falar no WhatsApp",
 
   /**
-   * A MENSAGEM, ao contrário do label, varia por seção de propósito: é o que
-   * permite saber de qual parte da página veio o lead.
-   *
-   * Uma chave por seção que tem CTA — as quatro abaixo são o caso comum, não
-   * uma lista fechada: copie da spec.md §1, que já as derivou das seções da §3.
-   *
-   * Estas chaves são contrato duplo — com a spec.md §1 e com o metadado do
-   * evento `whatsapp_click`, que o cliente lê no relatório do GA4. Uma vez
-   * definidas, renomear quebra os dois.
+   * A mensagem varia por seção: é ela que identifica de qual parte da página
+   * veio o lead. As chaves são contrato duplo — com a spec.md §1 e com o
+   * metadado do evento `whatsapp_click`. Renomear quebra os dois.
    */
   whatsappMessages: {
-    hero: "[Oi! Vim pela página e quero saber sobre <oferta>.]",
-    offer: "[Oi! Quero entender como funciona e os valores.]",
-    finalCta: "[Oi! Li a página toda e quero começar.]",
-    /** Barra fixa mobile — normalmente idêntica à do hero. */
-    mobileBar: "[Oi! Vim pela página e quero saber sobre <oferta>.]",
+    hero: "Oi! Vim pela página e quero agendar uma avaliação.",
+    about: "Oi! Vim pela página e quero entender como funciona a avaliação.",
+    specialist: "Oi! Quero falar sobre o protocolo de barreira.",
+    offer:
+      "Oi! Vi os valores na página e quero entender qual protocolo serve pra minha pele.",
+    finalCta: "Oi! Li a página toda e quero agendar a avaliação.",
+    /** Barra fixa mobile — idêntica à do hero (spec.md §1). */
+    mobileBar: "Oi! Vim pela página e quero agendar uma avaliação.",
   },
 } as const;
 
@@ -77,17 +72,13 @@ export function readUtmParams(): UtmParams {
 }
 
 /**
- * Monta o link `wa.me` com a mensagem da seção, URL-encoded. Havendo UTM, a
- * origem entra no fim da mensagem — é assim que o cliente sabe de qual anúncio
- * veio o lead, mesmo sem abrir o analytics.
+ * Monta o link `wa.me` com a mensagem da seção, URL-encoded.
+ *
+ * A UTM NÃO entra no texto (plan.md §3): o lead veria "(via campanha)" na
+ * mensagem que ele mesmo envia. A origem fica só no evento `whatsapp_click`.
  */
-export function buildWhatsappLink(
-  section: WhatsappSection,
-  utm: UtmParams = {},
-): string {
+export function buildWhatsappLink(section: WhatsappSection): string {
   const message = clientConfig.whatsappMessages[section];
-  const origin = utm.utm_campaign ?? utm.utm_source;
-  const fullMessage = origin ? `${message} (via ${origin})` : message;
 
-  return `https://wa.me/${clientConfig.whatsappNumber}?text=${encodeURIComponent(fullMessage)}`;
+  return `https://wa.me/${clientConfig.whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
