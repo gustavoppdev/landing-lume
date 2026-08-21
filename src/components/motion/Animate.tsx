@@ -22,7 +22,8 @@
  * Ritmo (duração, ease, intervalo do `stagger`, distância, escala de partida e
  * margem do gatilho) vem da tabela do `plan.md` §1.6 e vive nas constantes
  * abaixo — nunca em props, para nenhuma seção "customizar" o timing sem passar
- * pela decisão registrada.
+ * pela decisão registrada. O `scaleIn` está declarado mas nenhuma seção desta
+ * página o usa.
  * ───────────────────────────────────────────────────────────────────────────
  *
  * O QUE SAI NO HTML ESTÁTICO — o detalhe que decide o LCP:
@@ -68,20 +69,19 @@ interface AnimateProps {
   className?: string;
 }
 
-// ── RITMO — os sete valores vêm da tabela do `plan.md` §1.6 ────────────────
-// Os números abaixo são ILUSTRATIVOS: a feature-0 os transcreve do plano deste
-// projeto. Nenhum deles é prop — o plano decide uma vez e nenhuma seção
-// customiza. Declarar em vez de herdar é obrigatório: sem `transition` própria
-// o Motion escolhe um default POR PROPRIEDADE (`opacity` vira tween de 0.3s,
-// `y` e `scale` viram molas) e as três variantes ganham ritmos diferentes sem
+// ── RITMO — os sete valores da tabela do `plan.md` §1.6 ───────────────────
+// Nenhum deles é prop: o plano decide uma vez e nenhuma seção customiza.
+// Declarar em vez de herdar é obrigatório — sem `transition` própria o Motion
+// escolhe um default POR PROPRIEDADE (`opacity` vira tween de 0.3s, `y` e
+// `scale` viram molas) e as três variantes ganham ritmos diferentes sem
 // ninguém ter decidido isso.
 //
 // Nunca acrescente `delay` ao TRANSITION: o atraso do `stagger` é aplicado
 // antes e a transição da variante o sobrescreveria, matando a sequência.
-const TRANSITION: Transition = { duration: 1.2, ease: [0.22, 1, 0.36, 1] };
-const STAGGER_INTERVAL = 0.25; // segundos entre um filho e o próximo
-const FADE_UP_DISTANCE = 40; // px que o bloco sobe no `fadeUp`
-const SCALE_IN_FROM = 0.95; // escala de partida do `scaleIn` (1 = sem escala)
+const TRANSITION: Transition = { duration: 0.7, ease: [0.22, 1, 0.36, 1] };
+const STAGGER_INTERVAL = 0.12; // segundos entre um filho e o próximo
+const FADE_UP_DISTANCE = 28; // px que o bloco sobe no `fadeUp`
+const SCALE_IN_FROM = 0.96; // escala de partida do `scaleIn` (nenhuma seção usa)
 const VIEWPORT_MARGIN = "-120px"; // quanto o elemento entra na tela antes de animar
 
 const VARIANTS: Record<AnimateVariant, Variants> = {
